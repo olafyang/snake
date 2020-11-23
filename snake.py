@@ -83,6 +83,22 @@ def game_loop():
                         [snake_pos_list[0][0], snake_pos_list[0][1]])
                     player_score += 1
                     continue
+
+                # prevent snake from moving towards it's opposite direction
+                if event.key == pygame.K_LEFT and v_x1 > 0:
+                    v_x1 = snake_speed
+                    continue
+                if event.key == pygame.K_RIGHT and v_x1 < 0:
+                    v_x1 = -snake_speed
+                    continue
+
+                if event.key == pygame.K_UP and v_y1 > 0:
+                    v_y1 = snake_speed
+                    continue
+                if event.key == pygame.K_DOWN and v_y1 < 0:
+                    v_y1 = -snake_speed
+                    continue
+
                 v_x1 = 0
                 v_y1 = 0
                 if event.key == pygame.K_LEFT:
