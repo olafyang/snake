@@ -95,37 +95,42 @@ def game_loop():
                     v_y1 = snake_speed
 
         if not game_over:
-            # extend snake length
-            snake_pos_list[0][0] += v_x1
-            snake_pos_list[0][1] += v_y1
+            clock.tick(60)
 
             snake_pos_list.append([snake_pos_list[0][0], snake_pos_list[0][1]])
             if len(snake_pos_list) > player_score:
                 snake_pos_list.pop(1)
 
-            clock.tick(60)
-
-            # detect if snake hits itself
-            # for item in snake_pos_list[1:]:
-            #     if snake_pos_list[0][0] == item[0] and snake_pos_list[0][1] == item[1]:
-            #         game_over = True
-            #         lose_message('Game Over', red)
-
+            # generate food
             if not food_spawn:
                 food_pos = generate_food()
                 pygame.draw.rect(
                     dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
                 pygame.display.update()
                 food_spawn = True
+
             update_display(snake_pos_list, food_pos, player_score)
+
+            # check if snake head hits food
             if snake_pos_list[0] == food_pos:
-                player_score = player_score + 1
+                player_score = player_score + 10
                 food_spawn = False
+
+            # extend snake length
+            snake_pos_list[0][0] += v_x1
+            snake_pos_list[0][1] += v_y1
 
             # detect if snake hits boundaries
             if snake_pos_list[0][0] >= display_size[0] or snake_pos_list[0][0] < 0 or snake_pos_list[0][1] >= display_size[1] or snake_pos_list[0][1] < 0:
                 game_over = True
                 lose_message('Game Over', red)
+
+            # detect if snake hits itself
+            if len(snake_pos_list) > 1:
+                for pos in snake_pos_list[1:]:
+                    if snake_pos_list[0] == pos:
+                        game_over = True
+                        lose_message('Game Over', red)
 
     pygame.quit()
     quit()
