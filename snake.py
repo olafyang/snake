@@ -40,15 +40,15 @@ def update_display(pos_list, food, score):
         pygame.draw.rect(
             dis, white, [item[0], item[1], snake_size, snake_size])
     pygame.draw.rect(dis, blue, [food[0], food[1],
-                                 snake_size / 2, snake_size / 2])
+                                 snake_size, snake_size])
 
     show_score(score)
     pygame.display.update()
 
 
 def generate_food():
-    food_pos = [round(random.randrange(1, display_size[0])),
-                round(random.randrange(1, display_size[1]))]
+    food_pos = [round(random.randrange(1, display_size[0]) / 5) * 5,
+                round(random.randrange(1, display_size[1]) / 5) * 5]
     return food_pos
     # pygame.draw.rect(
     #     dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
@@ -118,6 +118,9 @@ def game_loop():
                 pygame.display.update()
                 food_spawn = True
             update_display(snake_pos_list, food_pos, player_score)
+            if snake_pos_list[0] == food_pos:
+                player_score = player_score + 1
+                food_spawn = False
 
             # detect if snake hits boundaries
             if snake_pos_list[0][0] >= display_size[0] or snake_pos_list[0][0] < 0 or snake_pos_list[0][1] >= display_size[1] or snake_pos_list[0][1] < 0:
