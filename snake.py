@@ -3,7 +3,7 @@ import random
 
 display_size = (800, 800)
 snake_size = 20
-snake_speed = 10  # in pixel
+snake_speed = 5  # in pixel
 
 pygame.init()
 
@@ -32,21 +32,27 @@ def lose_message(msg, color):
     pygame.display.update()
 
 
-def update_display(pos_list, score):
+def update_display(pos_list, food, score):
     dis.fill(black)
 
     # draw
     for item in pos_list:
-        pygame.draw.rect(dis, white, [item[0], item[1], snake_size, snake_size])
+        pygame.draw.rect(
+            dis, white, [item[0], item[1], snake_size, snake_size])
+    pygame.draw.rect(dis, blue, [food[0], food[1],
+                                 snake_size / 2, snake_size / 2])
 
     show_score(score)
     pygame.display.update()
 
 
 def generate_food():
-    food_pos = [round(random.randrange(1, display_size[0])), round(random.randrange(1, display_size[1]))]
-    pygame.draw.rect(dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
-    pygame.display.update()
+    food_pos = [round(random.randrange(1, display_size[0])),
+                round(random.randrange(1, display_size[1]))]
+    return food_pos
+    # pygame.draw.rect(
+    #     dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
+    # pygame.display.update()
 
 
 def game_loop():
@@ -56,6 +62,7 @@ def game_loop():
     quit_game = False
 
     snake_pos_list = []
+    food_spawn = False
 
     x1 = int(display_size[0] / 2 - snake_size)
     y1 = int(display_size[1] / 2 - snake_size)
@@ -70,6 +77,7 @@ def game_loop():
                 quit_game = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
+                    food_spawn = False
                     # code to extend length
                     snake_pos_list.append(
                         [snake_pos_list[0][0], snake_pos_list[0][1]])
@@ -92,21 +100,29 @@ def game_loop():
             snake_pos_list[0][1] += v_y1
 
             snake_pos_list.append([snake_pos_list[0][0], snake_pos_list[0][1]])
-            update_display(snake_pos_list, player_score)
             if len(snake_pos_list) > player_score:
                 snake_pos_list.pop(1)
 
             clock.tick(60)
 
-        # detect if snake hits boundaries
-        if snake_pos_list[0][0] >= display_size[0] or snake_pos_list[0][0] < 0 or snake_pos_list[0][1] >= display_size[1] or snake_pos_list[0][1] < 0:
-            game_over = True
-            lose_message('Game Over', red)
-        # detect if snake hits itself
-        # for item in snake_pos_list[1:]:
-        #     if snake_pos_list[0][0] == item[0] and snake_pos_list[0][1] == item[1]:
-        #         game_over = True
-        #         lose_message('Game Over', red)
+            # detect if snake hits itself
+            # for item in snake_pos_list[1:]:
+            #     if snake_pos_list[0][0] == item[0] and snake_pos_list[0][1] == item[1]:
+            #         game_over = True
+            #         lose_message('Game Over', red)
+
+            if not food_spawn:
+                food_pos = generate_food()
+                pygame.draw.rect(
+                    dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
+                pygame.display.update()
+                food_spawn = True
+            update_display(snake_pos_list, food_pos, player_score)
+
+            # detect if snake hits boundaries
+            if snake_pos_list[0][0] >= display_size[0] or snake_pos_list[0][0] < 0 or snake_pos_list[0][1] >= display_size[1] or snake_pos_list[0][1] < 0:
+                game_over = True
+                lose_message('Game Over', red)
 
     pygame.quit()
     quit()
