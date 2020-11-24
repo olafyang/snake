@@ -47,8 +47,8 @@ def update_display(pos_list, food, score):
 
 
 def generate_food():
-    food_pos = [round(random.randrange(1, display_size[0]) / 5) * 5,
-                round(random.randrange(1, display_size[1]) / 5) * 5]
+    food_pos = [round(random.randrange(1, display_size[0] - 10) / 5) * 5,
+                round(random.randrange(1, display_size[1] - 10) / 5) * 5]
     return food_pos
     # pygame.draw.rect(
     #     dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
