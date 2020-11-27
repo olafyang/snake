@@ -51,6 +51,11 @@ def generate_food():
     food_pos = [round(random.randrange(1, display_size[0])),
                 round(random.randrange(1, display_size[1]))]
 
+    # if unreachable, generate new position
+    while food_pos[0] < 15 or food_pos[0] > display_size[0] - 15 or food_pos[1] < 15 or food_pos[1] > display_size[1] - 15:
+        food_pos = [round(random.randrange(1, display_size[0])),
+                    round(random.randrange(1, display_size[1]))]
+
     return food_pos
 
 
@@ -76,11 +81,8 @@ def game_loop():
                 quit_game = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    food_spawn = False
-                    # code to extend length
-                    snake_pos_list.append(
-                        [snake_pos_list[0][0], snake_pos_list[0][1]])
-                    player_score += 1
+                    # regen food
+                    generate_food()
                     continue
 
                 # prevent snake from moving towards it's opposite direction
@@ -119,6 +121,7 @@ def game_loop():
             # generate food
             if not food_spawn:
                 food_pos = generate_food()
+                print('#{}'.format(food_pos))
                 pygame.draw.rect(
                     dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
                 pygame.display.update()
