@@ -35,24 +35,23 @@ def lose_message(msg, color):
 def update_display(pos_list, food, score):
     dis.fill(black)
 
-    # draw
+    # draw snake
     for item in pos_list:
         pygame.draw.rect(
             dis, white, [item[0], item[1], snake_size, snake_size])
+
     pygame.draw.rect(dis, blue, [food[0], food[1],
-                                 snake_size, snake_size])
+                                 snake_size / 2, snake_size / 2])
 
     show_score(score)
     pygame.display.update()
 
 
 def generate_food():
-    food_pos = [round(random.randrange(1, display_size[0] - 10) / 5) * 5,
-                round(random.randrange(1, display_size[1] - 10) / 5) * 5]
+    food_pos = [round(random.randrange(1, display_size[0])),
+                round(random.randrange(1, display_size[1]))]
+
     return food_pos
-    # pygame.draw.rect(
-    #     dis, blue, [food_pos[0], food_pos[1], snake_size, snake_size])
-    # pygame.display.update()
 
 
 def game_loop():
@@ -127,9 +126,38 @@ def game_loop():
 
             update_display(snake_pos_list, food_pos, player_score)
 
+            # # show range of snake's head
+            # if v_x1 < 0:
+            #     pygame.draw.rect(
+            #         dis, red, [snake_pos_list[0][0], snake_pos_list[0][1], 5, snake_size])
+            # elif v_x1 > 0:
+            #     pygame.draw.rect(
+            #         dis, red, [snake_pos_list[0][0] + snake_size - 5, snake_pos_list[0][1], 5, snake_size])
+            # elif v_y1 < 0:
+            #     pygame.draw.rect(
+            #         dis, red, [snake_pos_list[0][0], snake_pos_list[0][1], snake_size, 5])
+            # elif v_y1 > 0:
+            #     pygame.draw.rect(
+            #         dis, red, [snake_pos_list[0][0], snake_pos_list[0][1] + snake_size - 5, snake_size, 5])
+
+            pygame.display.update()
+
             # check if snake head hits food
-            if snake_pos_list[0] == food_pos:
-                player_score = player_score + 10
+            food_size = round(snake_size / 2)
+
+            food_pos_range_x = range(food_pos[0], food_pos[0] + food_size)
+            food_pos_range_y = range(food_pos[1], food_pos[1] + food_size)
+
+            snake_pos_range_x = range(
+                snake_pos_list[0][0], snake_pos_list[0][0] + snake_size)
+            snake_pos_range_y = range(
+                snake_pos_list[0][1], snake_pos_list[0][1] + snake_size)
+
+            if food_pos_range_x[0] in snake_pos_range_x and food_pos_range_x[-1] in snake_pos_range_x and food_pos_range_y[0] in food_pos_range_y and food_pos_range_y[-1] in snake_pos_range_y:
+                print(snake_pos_list[0])
+                print('{} | {}'.format(
+                    food_pos[0] + snake_size / 2, food_pos[1] + snake_size / 2))
+                player_score += 10
                 food_spawn = False
 
             # extend snake length
