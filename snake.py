@@ -154,9 +154,6 @@ def game_loop():
                 snake_pos_list[0][1], snake_pos_list[0][1] + snake_size)
 
             if food_pos_range_x[0] in snake_pos_range_x and food_pos_range_x[-1] in snake_pos_range_x and food_pos_range_y[0] in food_pos_range_y and food_pos_range_y[-1] in snake_pos_range_y:
-                print(snake_pos_list[0])
-                print('{} | {}'.format(
-                    food_pos[0] + snake_size / 2, food_pos[1] + snake_size / 2))
                 player_score += 10
                 food_spawn = False
 
